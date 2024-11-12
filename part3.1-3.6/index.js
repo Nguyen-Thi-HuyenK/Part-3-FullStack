@@ -3,10 +3,6 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/api/persons', (req, res) => {
-    res.json(persons);
-});
-
 let persons = 
 [
     { 
@@ -30,6 +26,16 @@ let persons =
       "number": "39-23-6423122"
     }
 ]
+
+app.get('/api/persons', (req, res) => {
+  res.json(persons);
+});
+
+app.get('/info', (req, res) => {
+  const date = new Date();
+  res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`);
+  console.log(date);
+});
 
 const port = 3001;
 app.listen(port, () => {
