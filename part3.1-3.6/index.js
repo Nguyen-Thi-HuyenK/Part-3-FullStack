@@ -40,8 +40,39 @@ app.get('/api/persons/:id', (req, res) => {
     res.status(404).end();
   }
 });
+// Delete person, if person is not found, return 404. 
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id);
+  persons = persons.filter(person => person.id !== id);
+  res.status(204).end();
+});
 
+// Add new person, if name or number is missing, return 400.
+app.post('/api/persons', (req, res) => {
+    const body = req.body;
 
+    if (!body.name || !body.number) {
+      return res.status(400).json({
+        error: 'name or number missing'
+      });
+    }
+
+    if (persons.find(person => person.name === body.name)) {
+      return res.status(400).json({
+        error: 'name must be unique'
+      });
+    }
+
+    const person = {
+      id: Math.floor(Math.random() * 1000),
+      name: body.name,
+      number: body.number
+    };
+
+    persons = persons.concat(person);
+    res.json(person);
+});
+  
 app.get('/info', (req, res) => {
   const date = new Date();
   res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`);
